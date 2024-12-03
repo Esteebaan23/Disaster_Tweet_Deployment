@@ -133,16 +133,42 @@ model_lstm = tf.keras.models.load_model('model_LSTM23_Final.h5')
 train_dataset = pd.read_csv("train.csv", encoding="latin-1")
 stop_words_list = stopwords.words('english')
 lemmatizer = WordNetLemmatizer()
-custom_words = {'im', 'u', 'â', 'ã', 'one'}
+extra_stop_words = ['u', 'im', 'r']
+extra_stop_words2 = [
+    'u', 'im', 'r', 'ur', 'pls', 'thx',
+    'b4', 'omw', 'ppl', 'msg', 'lvl',
+    'sos', '911', 'help', 'asap',
+    'wtf', 'omg', 'idk', 'nvm',
+    'brb', 'btw', 'lmk', 'imo',
+    'stay', 'safe', 'evacuate', 'fyi'
+]
+all_stop_words = stop_words_list + extra_stop_words + extra_stop_words2
+train_dataset['text_clean'] = train_dataset['text'].apply(process_tweet_content)
+custom_words = {'im', 'u','â', 'ã', 'one', 'ã ã', 'ã ã', 'ã âª', 'ã â', 'â ã', 'â', 'âª','â', 'ã','aaa', 'rt','aa', 'ye'}
+train_dataset['text_clean'] = train_dataset['text_clean'].apply(remove_specific_words)
+
+train_tweets = train_dataset['text_clean'].values
 tweet_tokenizer = Tokenizer()
-train_tweets = train_dataset['text'].apply(process_tweet_content).values
 tweet_tokenizer.fit_on_texts(train_tweets)
+vocabulary_size = len(tweet_tokenizer.word_index) + 1
 max_length = 23
 
+
+
+
+
 # Entrada de texto
-user_input = st.text_input("Enter the text of the tweet:")
+user_input = "Also my other nephew is proof that fat babies are going to save us from the apocalypse"
 
 
+
+processed_text = process_input_sentence(user_input)
+prediction = model_lstm.predict(processed_text)
+prediction_label = "REAL" if prediction >= 0.6 else "FAKE"
+probability = prediction[0][0] if prediction >= 0.6 else 1 - prediction[0][0]
+
+print(prediction_label)
+print(probability)
 
 if st.button("Predict"):
     if user_input:
