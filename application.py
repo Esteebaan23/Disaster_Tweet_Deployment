@@ -125,9 +125,23 @@ def process_input_sentence(input_sentence):
     return padded_sentence
 
 # Configuración inicial de Streamlit
-st.markdown("<h1 style='color: #007bff;'>Disaster Tweets Classifier</h1>", unsafe_allow_html=True)
-st.markdown("<p style='color: #555;'>This model predicts whether a tweet is <span style='color: green;'>REAL</span> or <span style='color: red;'>FAKE</span> in relation to natural disasters.</p>", unsafe_allow_html=True)
+st.markdown(
+    """
+    <h1 style="color: #007bff; text-align: center;">Disaster Tweets Classifier</h1>
+    """,
+    unsafe_allow_html=True,
+)
 
+# Descripción alineada a la izquierda
+st.markdown(
+    """
+    <p style="color: #555; text-align: left;">
+        This model predicts whether a tweet is <span style="color: green;">REAL</span> 
+        or <span style="color: red;">FAKE</span> in relation to natural disasters.
+    </p>
+    """,
+    unsafe_allow_html=True,
+)
 # Cargar modelo LSTM y datos necesarios
 model_lstm = tf.keras.models.load_model('model_LSTM23_Final.h5')
 train_dataset = pd.read_csv("train.csv", encoding="latin-1")
@@ -156,18 +170,41 @@ max_length = 23
 
 
 
-user_input = st.text_input("Enter the text of the tweet:")
+# Entrada de texto
+user_input = st.text_input(
+    "Enter the text of the tweet:", 
+    placeholder="Type the tweet text here..."
+)
 
+# Botón para predecir
 if st.button("Predict"):
     if user_input:
+        # Procesar el texto y predecir
         processed_text = process_input_sentence(user_input)
         prediction = model_lstm.predict(processed_text)
         prediction_label = "REAL" if prediction >= 0.6 else "FAKE"
         probability = prediction[0][0] if prediction >= 0.6 else 1 - prediction[0][0]
-        
-        st.markdown("<h2 style='color: #333;'>Prediction Result</h2>", unsafe_allow_html=True)
-        st.write(f"**Tweet entered:** {user_input}")
-        st.write(f"**Prediction:** {prediction_label}")
-        st.write(f"**Probability:** {probability:.2f}")
+
+        # Mostrar resultado en un recuadro estilizado
+        st.markdown(
+            f"""
+            <div style="
+                background-color: #f8f9fa; 
+                padding: 15px; 
+                border: 1px solid #ddd; 
+                border-radius: 8px; 
+                margin-top: 20px; 
+                text-align: center;
+            ">
+                <h2 style="color: #333; text-align: center;">Prediction Result</h2>
+                <p><strong>Tweet entered:</strong> {user_input}</p>
+                <p><strong>Prediction:</strong> <span style="color: {'green' if prediction_label == 'REAL' else 'red'};">{prediction_label}</span></p>
+                <p><strong>Probability:</strong> {probability:.2f}</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
     else:
+        # Mostrar error si no hay texto ingresado
         st.error("Please enter a text to predict.")
+
