@@ -125,8 +125,8 @@ def process_input_sentence(input_sentence):
     return padded_sentence
 
 # Configuración inicial de Streamlit
-st.title("Disaster Tweets Classifier")
-st.write("This model predicts whether a tweet is real or fake in relation to natural disasters.")
+st.markdown("<h1 style='color: #007bff;'>Disaster Tweets Classifier</h1>", unsafe_allow_html=True)
+st.markdown("<p style='color: #555;'>This model predicts whether a tweet is <span style='color: green;'>REAL</span> or <span style='color: red;'>FAKE</span> in relation to natural disasters.</p>", unsafe_allow_html=True)
 
 # Cargar modelo LSTM y datos necesarios
 model_lstm = tf.keras.models.load_model('model_LSTM23_Final.h5')
@@ -165,7 +165,7 @@ if st.button("Predict"):
         prediction_label = "REAL" if prediction >= 0.6 else "FAKE"
         probability = prediction[0][0] if prediction >= 0.6 else 1 - prediction[0][0]
         
-        st.subheader("Prediction Result")
+        st.markdown("<h2 style='color: #333;'>Prediction Result</h2>", unsafe_allow_html=True)
         st.write(f"**Tweet entered:** {user_input}")
         st.write(f"**Prediction:** {prediction_label}")
         st.write(f"**Probability:** {probability:.2f}")
