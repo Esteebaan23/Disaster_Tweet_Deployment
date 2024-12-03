@@ -1,0 +1,9 @@
+fastapi
+pandas
+pydantic
+uvicorn
+python-multipart
+starlette
+tensorflow
+nltk
+
