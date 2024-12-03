@@ -176,8 +176,28 @@ user_input = st.text_input(
     placeholder="Type the tweet text here..."
 )
 
-# Botón para predecir
-if st.button("Predict"):
+# Centrar el botón usando HTML y CSS
+st.markdown(
+    """
+    <div style="text-align: center; margin-top: 20px;">
+        <button style="
+            background-color: #007bff; 
+            color: white; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 5px; 
+            font-size: 16px; 
+            cursor: pointer;"
+            onclick="document.querySelector('button.streamlit-button').click()">
+            Predict
+        </button>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Ejecutar predicción si hay texto
+if st.button("Predict", key="predict_button"):
     if user_input:
         # Procesar el texto y predecir
         processed_text = process_input_sentence(user_input)
@@ -207,4 +227,5 @@ if st.button("Predict"):
     else:
         # Mostrar error si no hay texto ingresado
         st.error("Please enter a text to predict.")
+
 
