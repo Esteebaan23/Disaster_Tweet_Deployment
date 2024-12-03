@@ -156,7 +156,7 @@ max_length = 23
 
 
 
-user_input = st.text_input("Ingrese el texto del tweet:")
+user_input = st.text_input("Enter the text of the tweet:")
 
 if st.button("Predict"):
     if user_input:
@@ -165,7 +165,7 @@ if st.button("Predict"):
         prediction_label = "REAL" if prediction >= 0.6 else "FAKE"
         probability = prediction[0][0] if prediction >= 0.6 else 1 - prediction[0][0]
         
-        st.subheader("Resultado de la Predicción")
+        st.subheader("Prediction Result")
         st.write(f"**Tweet entered:** {user_input}")
         st.write(f"**Prediction:** {prediction_label}")
         st.write(f"**Probability:** {probability:.2f}")
