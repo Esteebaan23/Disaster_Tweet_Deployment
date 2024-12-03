@@ -156,19 +156,7 @@ max_length = 23
 
 
 
-
-# Entrada de texto
-user_input = "Also my other nephew is proof that fat babies are going to save us from the apocalypse"
-
-
-
-processed_text = process_input_sentence(user_input)
-prediction = model_lstm.predict(processed_text)
-prediction_label = "REAL" if prediction >= 0.6 else "FAKE"
-probability = prediction[0][0] if prediction >= 0.6 else 1 - prediction[0][0]
-
-print(prediction_label)
-print(probability)
+user_input = st.text_input("Ingrese el texto del tweet:")
 
 if st.button("Predict"):
     if user_input:
