@@ -176,56 +176,59 @@ user_input = st.text_input(
     placeholder="Type the tweet text here..."
 )
 
-# Centrar el botón usando HTML y CSS
-st.markdown(
+# Centrar y estilizar el botón usando HTML y CSS
+button_clicked = st.markdown(
     """
-    <div style="text-align: center; margin-top: 20px;">
-        <button style="
-            background-color: #007bff; 
-            color: white; 
-            padding: 10px 20px; 
-            border: none; 
-            border-radius: 5px; 
-            font-size: 16px; 
-            cursor: pointer;"
-            onclick="document.querySelector('button.streamlit-button').click()">
-            Predict
-        </button>
-    </div>
+    <form action="#" method="POST">
+        <div style="text-align: center; margin-top: 20px;">
+            <button type="submit" style="
+                background-color: #007bff; 
+                color: white; 
+                padding: 10px 20px; 
+                border: none; 
+                border-radius: 5px; 
+                font-size: 16px; 
+                cursor: pointer;"
+                id="predict_button">
+                Predict
+            </button>
+        </div>
+    </form>
     """,
     unsafe_allow_html=True,
 )
 
-# Ejecutar predicción si hay texto
-if st.button("Predict", key="predict_button"):
-    if user_input:
-        # Procesar el texto y predecir
-        processed_text = process_input_sentence(user_input)
-        prediction = model_lstm.predict(processed_text)
-        prediction_label = "REAL" if prediction >= 0.6 else "FAKE"
-        probability = prediction[0][0] if prediction >= 0.6 else 1 - prediction[0][0]
+# Ejecutar predicción solo si el formulario se envía
+if st.session_state.get("form_submitted") and user_input:
+    # Procesar el texto y predecir
+    processed_text = process_input_sentence(user_input)
+    prediction = model_lstm.predict(processed_text)
+    prediction_label = "REAL" if prediction >= 0.6 else "FAKE"
+    probability = prediction[0][0] if prediction >= 0.6 else 1 - prediction[0][0]
 
-        # Mostrar resultado en un recuadro estilizado
-        st.markdown(
-            f"""
-            <div style="
-                background-color: #f8f9fa; 
-                padding: 15px; 
-                border: 1px solid #ddd; 
-                border-radius: 8px; 
-                margin-top: 20px; 
-                text-align: center;
-            ">
-                <h2 style="color: #333; text-align: center;">Prediction Result</h2>
-                <p><strong>Tweet entered:</strong> {user_input}</p>
-                <p><strong>Prediction:</strong> <span style="color: {'green' if prediction_label == 'REAL' else 'red'};">{prediction_label}</span></p>
-                <p><strong>Probability:</strong> {probability:.2f}</p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    else:
-        # Mostrar error si no hay texto ingresado
-        st.error("Please enter a text to predict.")
+    # Mostrar resultado en un recuadro estilizado
+    st.markdown(
+        f"""
+        <div style="
+            background-color: #f8f9fa; 
+            padding: 15px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            margin-top: 20px; 
+            text-align: center;
+        ">
+            <h2 style="color: #333; text-align: center;">Prediction Result</h2>
+            <p><strong>Tweet entered:</strong> {user_input}</p>
+            <p><strong>Prediction:</strong> <span style="color: {'green' if prediction_label == 'REAL' else 'red'};">{prediction_label}</span></p>
+            <p><strong>Probability:</strong> {probability:.2f}</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+elif st.session_state.get("form_submitted"):
+    st.error("Please enter a text to predict.")
+
+# Actualizar estado del formulario
+st.session_state["form_submitted"] = st.button("form_submitted", key="form_submit_button", disabled=True)
 
 
