@@ -137,7 +137,7 @@ st.markdown(
     """
     <p style="color: #555; text-align: left;">
         This model predicts whether a tweet is <span style="color: green;">REAL</span> 
-        or <span style="color: red;">FAKE</span> in relation to natural disasters.
+        or <span style="color: red;">FAKE</span> in relation to natural disasters with LSTM.
     </p>
     """,
     unsafe_allow_html=True,
